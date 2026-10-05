@@ -1,38 +1,23 @@
 package com.ecommerce.sb_ecom.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name = "categories")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long categoryId;
+
     @Column(name = "category_name", nullable = false, unique = true)
+    @NotBlank(message = "Category name is required")
     private String categoryName;
-
-    public Category(Long categoryId, String categoryName) {
-        this.Id = categoryId;
-        this.categoryName = categoryName;
-    }
-
-    public Category() {
-
-    }
-
-    public Long getCategoryId() {
-        return Id;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.Id = categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }

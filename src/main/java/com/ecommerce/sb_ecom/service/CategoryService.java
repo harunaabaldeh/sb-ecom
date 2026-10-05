@@ -1,7 +1,8 @@
 package com.ecommerce.sb_ecom.service;
 
 import com.ecommerce.sb_ecom.model.Category;
-import com.ecommerce.sb_ecom.repository.CategoryRepository;
+import com.ecommerce.sb_ecom.repositories.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
-    private final List<Category> categories = new ArrayList<>();
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<Category> getAllCategories() {
@@ -30,14 +30,22 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        categoryRepository.delete(category);
     }
 
     @Override
     public Category updateCategory(Category categoryDto, Long categoryId) {
-       Category category = findCategoryById(categoryId);
-       category.setCategoryName(categoryDto.getCategoryName());
-       return categoryRepository.save(category);
+
+        Category savedCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        categoryDto.setCategoryName(categoryDto.getCategoryName());
+        savedCategory = categoryRepository.save(categoryDto);
+
+        return savedCategory;
     }
 
     @Override
