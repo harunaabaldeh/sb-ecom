@@ -2,6 +2,7 @@ package com.ecommerce.sb_ecom.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +20,6 @@ public class Category {
 
     @Column(name = "category_name", nullable = false, unique = true)
     @NotBlank(message = "Category name is required")
+    @Size(min = 3, message = "Category must contain at least 5 characters")
     private String categoryName;
 }
