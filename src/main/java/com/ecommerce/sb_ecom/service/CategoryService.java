@@ -29,22 +29,24 @@ public class CategoryService implements ICategoryService {
         if (categories.isEmpty())
             throw new APIException("No categories found!");
 
-        List<CategoryDto> categoryDtos = categories.stream()
+        List<CategoryDto> categoryDTO = categories.stream()
                 .map(category -> modelMapper.map(category, CategoryDto.class))
                 .toList();
 
         CategoryResponse categoryResponse = new CategoryResponse();
-        categoryResponse.setContent(categoryDtos);
+        categoryResponse.setContent(categoryDTO);
 
         return categoryResponse;
     }
 
     @Override
-    public void createCategory(Category category) {
-        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
-        if (savedCategory != null)
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
+        Category dbCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (dbCategory != null)
             throw new APIException("Category  with the name " + category.getCategoryName() + " already exists");
-        categoryRepository.save(category);
+       Category savedCategory =  categoryRepository.save(category);
+       return modelMapper.map(savedCategory, CategoryDto.class);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.ecommerce.sb_ecom.controller;
 
 import com.ecommerce.sb_ecom.model.Category;
+import com.ecommerce.sb_ecom.payload.CategoryDto;
 import com.ecommerce.sb_ecom.payload.CategoryResponse;
 import com.ecommerce.sb_ecom.service.ICategoryService;
 import jakarta.validation.Valid;
@@ -8,42 +9,41 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
-    private final ICategoryService iCategoryService;
+    private final ICategoryService categoryService;
 
     public CategoryController(ICategoryService iCategoryService) {
-        this.iCategoryService = iCategoryService;
+        this.categoryService = iCategoryService;
     }
 
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getAllCategories() {
-        CategoryResponse categoryResponse = iCategoryService.getAllCategories();
+        CategoryResponse categoryResponse = categoryService.getAllCategories();
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
-        iCategoryService.createCategory(category);
-        return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
+    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
+        CategoryDto savedCategoryDto = categoryService.createCategory(categoryDto);
+        return new ResponseEntity<>(savedCategoryDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        String status = iCategoryService.deleteCategory(categoryId);
+        String status = categoryService.deleteCategory(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(status);
     }
 
     @PutMapping("/public/categories/{categoryId}")
     public Category updateCategory(@Valid @RequestBody Category category, @PathVariable Long categoryId) {
-        return iCategoryService.updateCategory(category, categoryId);
+        return categoryService.updateCategory(category, categoryId);
     }
 
     @GetMapping("/public/categories/{categoryId}")
     public Category getCategoryById(@PathVariable Long categoryId){
-       return iCategoryService.findCategoryById(categoryId);
+       return categoryService.findCategoryById(categoryId);
     }
 }
