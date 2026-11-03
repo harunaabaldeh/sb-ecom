@@ -2,17 +2,17 @@ package com.ecommerce.sb_ecom.service;
 
 import com.ecommerce.sb_ecom.model.Category;
 import com.ecommerce.sb_ecom.payload.CategoryDto;
+import com.ecommerce.sb_ecom.payload.CategoryRequest;
 import com.ecommerce.sb_ecom.payload.CategoryResponse;
 
-
 public interface ICategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
-    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto createCategory(CategoryRequest categoryRequest);
 
-    String deleteCategory(Long categoryId);
+    CategoryDto deleteCategory(Long categoryId);
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryDto updateCategory(CategoryDto categoryDto, Long categoryId);
 
     Category findCategoryById(Long Id);
 }
